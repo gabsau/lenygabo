@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Leny &amp; Gabo · Guía de viajes</title>
+  <meta name="description" content="La guía de viajes de Leny & Gabo: dónde comimos, qué pedimos y las fotos, viaje por viaje.">
+  <meta name="theme-color" content="#F5F1EB">
+
+  <!-- Vista previa al compartir el enlace (WhatsApp, iMessage, redes). Cambia la URL si mueves el sitio. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Leny & Gabo · Guía de viajes">
+  <meta property="og:title" content="La guía de viajes de Leny & Gabo">
+  <meta property="og:description" content="Dónde comimos, qué pedimos y las fotos, viaje por viaje. Primer destino: San Sebastián.">
+  <meta property="og:image" content="https://gabsau.github.io/lenygabo/IMAGENES/SAN%20SEBASTIAN/PORTADA-og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23D4A574'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Georgia,serif' font-size='28' font-weight='700' fill='%233F312A'%3EL%26G%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="fuentes/young-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div id="app"></div>
+
+  <dialog id="visor" class="visor" aria-labelledby="visor-titulo">
+    <div class="visor-barra">
+      <span id="visor-titulo" class="visor-titulo"></span>
+      <span class="visor-contador" aria-live="polite"></span>
+      <button type="button" class="visor-cerrar" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="visor-pista"></div>
+    <button type="button" class="visor-nav visor-prev" aria-label="Foto anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button type="button" class="visor-nav visor-next" aria-label="Foto siguiente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </dialog>
+
+  <script src="datos.js"></script>
+  <script src="fotos.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

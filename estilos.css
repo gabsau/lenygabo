@@ -1,0 +1,595 @@
+/* ============================================================================
+   Guía de viajes de Leny & Gabo — estilos
+   Paleta cálida (crema, marrón, caramelo), esquinas rectas, titulares en Young Serif.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Young Serif';
+  src: url('fuentes/young-serif-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --fondo: #F5F1EB;
+  --papel: #FFFFFF;
+  --tinta: #3F312A;
+  --texto: #5C4A42;
+  --texto-suave: #6F5B4A;
+  --linea: #E8DCC8;
+  --linea-suave: #F0E8DC;
+  --caramelo: #D4A574;
+  --caramelo-oscuro: #B8894F;
+  --crema: #F5F1EB;
+  --noche: #1E1612;
+  --sombra: 0 1px 2px rgba(63, 49, 42, 0.06), 0 12px 28px -16px rgba(63, 49, 42, 0.28);
+  --sombra-alta: 0 2px 4px rgba(63, 49, 42, 0.08), 0 20px 44px -18px rgba(63, 49, 42, 0.34);
+  --ancho: 1200px;
+  --gutter: clamp(16px, 3vw, 32px);
+  --alto-barra: 52px;
+  --fuente: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --fuente-titulo: 'Young Serif', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --curva: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--caramelo) var(--fondo);
+  background: var(--fondo);
+}
+html:has(dialog[open]) { overflow: hidden; }
+
+body {
+  margin: 0;
+  font-family: var(--fuente);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--texto);
+  background: var(--fondo);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+address { font-style: normal; }
+::selection { background: var(--caramelo); color: var(--tinta); }
+:focus-visible { outline: 2px solid var(--caramelo-oscuro); outline-offset: 2px; }
+
+h1, h2, h3 {
+  font-family: var(--fuente-titulo);
+  font-weight: 400;
+  font-synthesis: none;
+  color: var(--tinta);
+  margin: 0;
+  font-optical-sizing: auto;
+}
+
+.contenedor {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.visualmente-oculto {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---------- Aviso de error ---------- */
+.aviso {
+  background: #FBE9E4;
+  color: #6B2A1E;
+  border-top: 3px solid #C4553A;
+  padding: 14px var(--gutter);
+  display: grid;
+  gap: 4px;
+  font-size: 0.95rem;
+}
+.aviso code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.9em; }
+
+/* ---------- Portada ---------- */
+.portada {
+  text-align: center;
+  padding-top: clamp(64px, 14vw, 140px);
+  padding-bottom: clamp(36px, 6vw, 64px);
+}
+.portada h1 {
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.portada-texto {
+  margin: 22px auto 0;
+  max-width: 34em;
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--texto-suave);
+  text-wrap: pretty;
+}
+
+.viajes { padding-bottom: clamp(40px, 8vw, 96px); }
+.viajes h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 18px;
+}
+.viajes-lista {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+
+.viaje {
+  display: grid;
+  background: var(--papel);
+  border-top: 3px solid var(--caramelo);
+  box-shadow: var(--sombra);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: box-shadow 0.35s var(--curva);
+}
+.viaje:hover { box-shadow: var(--sombra-alta); }
+.viaje-foto {
+  aspect-ratio: 16 / 10;
+  background: var(--linea-suave);
+  overflow: hidden;
+}
+.viaje-foto img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--curva);
+}
+.viaje:hover .viaje-foto img { transform: scale(1.03); }
+.viaje-texto {
+  padding: 24px;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+.viaje h3 {
+  font-size: 2rem;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.viaje-sub { margin: 0; color: var(--texto-suave); font-size: 0.95rem; }
+.viaje-intro { margin: 8px 0 0; line-height: 1.55; text-wrap: pretty; }
+.viaje-datos { margin: 6px 0 0; font-size: 0.9rem; color: var(--texto-suave); font-variant-numeric: tabular-nums; }
+.viaje-abrir {
+  margin-top: 18px;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--tinta);
+  border-bottom: 2px solid var(--caramelo);
+  padding-bottom: 2px;
+}
+.viaje-abrir svg { width: 18px; height: 18px; transition: transform 0.3s var(--curva); }
+.viaje:hover .viaje-abrir svg { transform: translateX(3px); }
+
+.viajes-lista.unico { grid-template-columns: 1fr; }
+@media (min-width: 760px) {
+  .viajes-lista.unico .viaje { grid-template-columns: 1.25fr 1fr; }
+  .viajes-lista.unico .viaje-foto { aspect-ratio: auto; min-height: 400px; }
+  .viajes-lista.unico .viaje-texto { padding: 44px 40px; align-content: center; }
+  .viajes-lista.unico .viaje h3 { font-size: 2.75rem; }
+}
+
+/* ---------- Barra superior del viaje ---------- */
+.barra {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--fondo);
+  border-bottom: 1px solid var(--linea);
+}
+.barra-interior {
+  height: var(--alto-barra);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.barra-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  margin-left: -8px;
+  padding: 0 10px 0 4px;
+  font-weight: 500;
+  color: var(--texto);
+  text-decoration: none;
+}
+.barra-volver svg { width: 20px; height: 20px; }
+.barra-volver:hover { color: var(--tinta); }
+.barra-marca {
+  font-family: var(--fuente-titulo);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: 1.15rem;
+  color: var(--tinta);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Cabecera del viaje ---------- */
+.viaje-cabecera { padding-top: 16px; }
+.viaje-portada {
+  aspect-ratio: 16 / 9;
+  max-height: 440px;
+  overflow: hidden;
+  background: var(--linea-suave);
+}
+.viaje-portada img { width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 760px) { .viaje-portada { aspect-ratio: 21 / 9; } }
+
+.viaje-titular {
+  padding: clamp(24px, 4vw, 40px) 0 clamp(8px, 2vw, 16px);
+  max-width: 46rem;
+}
+.viaje-titular h1 {
+  font-size: clamp(2.5rem, 6.5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  outline: none;
+}
+.viaje-titular .viaje-sub { margin-top: 10px; font-size: 1rem; }
+.viaje-titular .viaje-intro { margin-top: 14px; font-size: 1.05rem; max-width: 38em; }
+
+/* ---------- Pestañas ---------- */
+.pestanas {
+  position: sticky;
+  top: var(--alto-barra);
+  z-index: 15;
+  background: var(--fondo);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--linea);
+}
+.pestanas-lista {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  max-width: 560px;
+  background: var(--papel);
+  border: 1px solid var(--linea);
+}
+.pestana {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--texto-suave);
+  text-decoration: none;
+  transition: background-color 0.2s var(--curva), color 0.2s var(--curva);
+}
+.pestana:hover { background: var(--fondo); color: var(--tinta); }
+.pestana[aria-selected="true"] { background: var(--tinta); color: var(--crema); }
+.pestana:focus-visible { outline-offset: -3px; outline-color: var(--caramelo); }
+@media (max-width: 380px) { .pestana { font-size: 0.875rem; padding: 0 8px; } }
+
+/* ---------- Secciones ---------- */
+.seccion-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 28px 0 20px;
+}
+.seccion-cabecera h2 {
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  letter-spacing: -0.015em;
+}
+.seccion-cabecera p { margin: 0; color: var(--texto-suave); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+
+.lugares {
+  display: grid;
+  gap: clamp(20px, 3vw, 32px);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  padding-bottom: 24px;
+}
+
+/* ---------- Tarjeta de lugar ---------- */
+.lugar {
+  display: flex;
+  flex-direction: column;
+  background: var(--papel);
+  border-top: 3px solid var(--caramelo);
+  box-shadow: var(--sombra);
+  transition: box-shadow 0.35s var(--curva);
+}
+@media (hover: hover) { .lugar:hover { box-shadow: var(--sombra-alta); } }
+
+.lugar-cuerpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px 24px;
+}
+.lugar h3 {
+  font-size: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+.lugar-tipo { margin: 4px 0 0; font-size: 0.9rem; color: var(--texto-suave); }
+
+.platos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.platos li {
+  padding: 9px 0;
+  border-top: 1px solid var(--linea-suave);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.platos li:first-child { border-top: 0; padding-top: 0; }
+.platos li:last-child { padding-bottom: 0; }
+
+.ubicacion {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--linea);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+}
+.ubicacion address { font-size: 0.9rem; line-height: 1.4; color: var(--texto-suave); }
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--caramelo);
+  color: var(--tinta);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s var(--curva);
+}
+.boton svg { width: 18px; height: 18px; flex: none; }
+.boton:hover { background: var(--caramelo-oscuro); }
+@media (max-width: 480px) { .boton { width: 100%; } }
+
+/* ---------- Mosaico de fotos ---------- */
+.mosaico {
+  display: grid;
+  gap: 2px;
+  background: var(--linea);
+}
+.mosaico[data-n="1"] { grid-template-columns: 1fr; }
+.mosaico[data-n="1"] .foto { aspect-ratio: 16 / 10; }
+.mosaico[data-n="2"] { grid-template-columns: 1fr 1fr; }
+.mosaico[data-n="2"] .foto { aspect-ratio: 1; }
+.mosaico[data-n="3"] { grid-template-columns: 3fr 2fr; }
+.mosaico[data-n="3"] .foto:first-child { grid-row: 1 / 3; }
+.mosaico[data-n="3"] .foto:not(:first-child) { aspect-ratio: 5 / 4; }
+.mosaico[data-n="4"] { grid-template-columns: 1fr 1fr; }
+.mosaico[data-n="4"] .foto { aspect-ratio: 4 / 3; }
+
+.foto {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--linea-suave);
+  overflow: hidden;
+  cursor: zoom-in;
+}
+.foto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--curva);
+}
+@media (hover: hover) and (pointer: fine) { .foto:hover img { transform: scale(1.04); } }
+.foto:focus-visible { outline: 3px solid var(--caramelo); outline-offset: -3px; z-index: 1; }
+.foto-mas {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(30, 22, 18, 0.5);
+  color: var(--crema);
+  font-family: var(--fuente-titulo);
+  font-weight: 400;
+  font-size: 1.5rem;
+}
+.foto.rota { cursor: default; }
+.foto.rota img { display: none; }
+.foto.rota::after {
+  content: 'Foto no disponible';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+/* ---------- Bebidas ---------- */
+.bebidas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 2px;
+  background: var(--linea);
+  border-top: 3px solid var(--caramelo);
+  box-shadow: var(--sombra);
+  margin-bottom: 24px;
+}
+.bebida {
+  background: var(--papel);
+  padding: clamp(24px, 4vw, 36px);
+}
+.bebida h3 { font-size: 1.75rem; letter-spacing: -0.015em; margin-bottom: 10px; }
+.bebida p { margin: 0; line-height: 1.65; max-width: 48ch; text-wrap: pretty; }
+
+/* ---------- Pie ---------- */
+.pie {
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+  padding-top: 40px;
+  padding-bottom: max(48px, env(safe-area-inset-bottom));
+}
+.pie p { margin: 4px 0; }
+
+/* ---------- Visor de fotos ---------- */
+.visor {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--noche);
+  color: var(--crema);
+  overflow: hidden;
+}
+.visor::backdrop { background: rgba(30, 22, 18, 0.9); }
+.visor[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  animation: visor-entra 0.32s var(--curva);
+}
+@keyframes visor-entra {
+  from { opacity: 0; transform: scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+.visor-barra {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: max(8px, env(safe-area-inset-top)) 8px 8px 20px;
+}
+.visor-titulo {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--fuente-titulo);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: 1.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.visor-contador {
+  font-size: 0.9rem;
+  color: rgba(245, 241, 235, 0.72);
+  font-variant-numeric: tabular-nums;
+}
+.visor-cerrar {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s var(--curva);
+}
+.visor-cerrar svg { width: 22px; height: 22px; }
+.visor-cerrar:hover { background: rgba(245, 241, 235, 0.1); }
+.visor :focus-visible { outline-color: var(--caramelo); }
+
+.visor-pista {
+  position: relative;
+  display: flex;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.visor-pista::-webkit-scrollbar { display: none; }
+.visor-foto {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.visor-foto img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  align-self: stretch;
+  justify-self: stretch;
+}
+.visor-foto figcaption {
+  text-align: center;
+  padding: 12px 20px 20px;
+  color: rgba(245, 241, 235, 0.85);
+  font-size: 0.95rem;
+  text-wrap: balance;
+}
+
+.visor-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  display: none;
+  place-items: center;
+  border: 0;
+  background: rgba(245, 241, 235, 0.1);
+  color: var(--crema);
+  cursor: pointer;
+  transition: background-color 0.2s var(--curva), opacity 0.2s var(--curva);
+}
+.visor-nav svg { width: 24px; height: 24px; }
+.visor-nav:hover { background: rgba(245, 241, 235, 0.22); }
+.visor-nav:disabled { opacity: 0.25; cursor: default; }
+.visor-prev { left: 16px; }
+.visor-next { right: 16px; }
+@media (hover: hover) and (pointer: fine) { .visor[open] .visor-nav { display: grid; } }
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
