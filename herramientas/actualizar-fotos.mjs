@@ -5,9 +5,10 @@
  *   node herramientas/actualizar-fotos.mjs                 escanea, optimiza y reescribe fotos.js
  *   node herramientas/actualizar-fotos.mjs --sin-optimizar  igual, pero sin tocar las imágenes
  *
- * Convención:  <carpetaFotos del viaje>/<NOMBRE DEL LUGAR>/foto.jpg
+ * Convención:  <carpetaFotos del viaje>/<NOMBRE DEL LUGAR O BEBIDA>/foto.jpg
  *  - El nombre de la carpeta se compara con `nombre` y `alias` de cada lugar
- *    de datos.js ignorando mayúsculas, acentos y signos.
+ *    (y de cada bebida) de datos.js ignorando mayúsculas, acentos y signos.
+ *  - Los viajes privados (con `privado`) solo aportan su portada.
  *  - Las carpetas con "PORTADA" en el nombre y los archivos sueltos en la raíz
  *    de carpetaFotos se ignoran.
  *  - Se conservan el orden y los pies de foto ("pie") ya escritos en fotos.js.
@@ -84,6 +85,7 @@ function dimensiones(ruta) {
 
 /** Reduce una foto pesada en su sitio y guarda el original en respaldo/originales. */
 function optimizar(rutaAbs) {
+  if (!ES_IMAGEN.test(rutaAbs)) return false; // p. ej. una portada .svg
   const peso = fs.statSync(rutaAbs).size;
   const { w, h } = dimensiones(rutaAbs);
   if (peso <= PESO_MAX && Math.max(w, h) <= LADO_MAX) return false;
@@ -187,9 +189,11 @@ function main() {
       continue;
     }
 
-    const lugares = viaje.secciones.flatMap((s) => s.lugares || []);
+    // Lugares y bebidas: cualquier elemento con `id` y `nombre` puede tener fotos.
+    const lugares = (viaje.secciones || []).flatMap((s) => [...(s.lugares || []), ...(s.bebidas || [])]);
     const indice = new Map();
     for (const l of lugares) {
+      if (!l.id) { aviso(`"${l.nombre}" (${viaje.titulo}) no tiene id en datos.js; sus fotos se omiten.`); continue; }
       indice.set(normalizar(l.nombre), l);
       for (const a of l.alias || []) indice.set(normalizar(a), l);
     }

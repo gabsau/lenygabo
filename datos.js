@@ -3,9 +3,12 @@
 //  Edita este archivo para añadir viajes, lugares, platos o textos.
 //  Las FOTOS no se listan aquí: se generan en fotos.js con
 //      node herramientas/actualizar-fotos.mjs
-//  Convención de carpetas:  <carpetaFotos>/<NOMBRE DEL LUGAR>/foto.jpg
+//  Convención de carpetas:  <carpetaFotos>/<NOMBRE DEL LUGAR O BEBIDA>/foto.jpg
 //  El nombre de la carpeta se compara con `nombre` y `alias` de cada lugar
-//  sin importar mayúsculas, acentos ni signos.
+//  o bebida sin importar mayúsculas, acentos ni signos.
+//  Un viaje con `privado` no lleva secciones: muestra su portada y pide una
+//  contraseña para abrir el archivo cifrado que genera
+//      node herramientas/cifrar-viaje.mjs <id> "<ruta al HTML del viaje>"
 // ============================================================================
 window.DATOS = {
   marca: 'Leny & Gabo',
@@ -161,16 +164,33 @@ window.DATOS = {
           corto: 'Bebidas',
           bebidas: [
             {
+              id: 'cana',
               nombre: 'Caña',
               texto: 'Cerveza tradicional de la región. Su frescor y ligereza la hacen la compañera perfecta para recorrer los pintxos por la Parte Vieja.',
             },
             {
+              id: 'txacoli',
               nombre: 'Txacoli',
               texto: 'Vino blanco joven y ligero típico del País Vasco. Una ligera carbonatación natural le da ese carácter refrescante y frutal que define esta región vinícola.',
             },
           ],
         },
       ],
+    },
+
+    {
+      id: 'orlando-2026',
+      titulo: 'Orlando y el Star of the Seas',
+      subtitulo: 'Disney y crucero por el Caribe',
+      fecha: 'Septiembre 2026',
+      intro: 'Cinco días en Orlando y siete noches por el Caribe con toda la familia. Itinerario, vuelos, camarotes y confirmaciones, solo para quienes van.',
+      portada: 'IMAGENES/ORLANDO 2026/PORTADA.svg',
+      carpetaFotos: 'IMAGENES/ORLANDO 2026',
+      // Viaje privado: el contenido vive cifrado en `archivo` y se abre con contraseña.
+      privado: {
+        archivo: 'viajes/orlando-2026.cifrado.js',
+        pista: 'La contraseña se compartió por WhatsApp; si no la tienes, pídesela a Gabo o a Leny.',
+      },
     },
   ],
 };

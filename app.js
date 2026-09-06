@@ -1,7 +1,8 @@
 /* ============================================================================
    Guía de viajes de Leny & Gabo — app.js
    Router por hash (#/, #/viaje, #/viaje/seccion), render de portada y viajes,
-   mosaicos de fotos y visor a pantalla completa. Sin dependencias.
+   mosaicos de fotos, visor a pantalla completa y viajes privados cifrados
+   (se abren con contraseña en el navegador). Sin dependencias.
    ========================================================================== */
 (() => {
   'use strict';
@@ -24,6 +25,9 @@
     anterior: icono('<path d="M15 18l-6-6 6-6"/>'),
     siguiente: icono('<path d="M9 18l6-6-6-6"/>'),
     flecha: icono('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+    candado: icono('<rect x="4" y="11" width="16" height="10" rx="1.5"/>', '<path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
+    abierto: icono('<rect x="4" y="11" width="16" height="10" rx="1.5"/>', '<path d="M8 11V7a4 4 0 0 1 7.6-1.7"/>'),
+    ojo: icono('<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/>', '<circle cx="12" cy="12" r="3"/>'),
   };
   const aviso = (titulo, texto) =>
     `<div class="aviso" role="alert"><strong>${titulo}</strong><span>${texto}</span></div>`;
@@ -45,8 +49,11 @@
   );
 
   const fotosDe = (viaje, lugar) => ((FOTOS || {})[viaje.id] || {})[lugar.id] || [];
-  const lugaresDe = (viaje) => viaje.secciones.flatMap((s) => s.lugares || []);
-  const totalFotos = (viaje) => lugaresDe(viaje).reduce((n, l) => n + fotosDe(viaje, l).length, 0);
+  const seccionesDe = (viaje) => viaje.secciones || [];
+  const lugaresDe = (viaje) => seccionesDe(viaje).flatMap((s) => s.lugares || []);
+  // Lugares y bebidas: todo lo que puede llevar fotos.
+  const conFotos = (viaje) => seccionesDe(viaje).flatMap((s) => [...(s.lugares || []), ...(s.bebidas || [])]);
+  const totalFotos = (viaje) => conFotos(viaje).reduce((n, l) => n + fotosDe(viaje, l).length, 0);
 
   // ---------- Plantillas ----------
   const pie = () => `
@@ -56,20 +63,39 @@
     </footer>`;
 
   const tarjetaViaje = (v) => {
-    const lugares = lugaresDe(v).length;
-    const fotos = totalFotos(v);
+    const datos = v.privado
+      ? `${ICONO.candado}Viaje privado · se abre con contraseña`
+      : `${plural(lugaresDe(v).length, 'lugar', 'lugares')} · ${plural(totalFotos(v), 'foto', 'fotos')}`;
     return `
-      <a class="viaje" href="#/${esc(v.id)}">
+      <a class="viaje${v.privado ? ' privado' : ''}" href="#/${esc(v.id)}">
         <div class="viaje-foto">${v.portada ? `<img src="${esc(v.portada)}" alt="" decoding="async">` : ''}</div>
         <div class="viaje-texto">
           <h3>${esc(v.titulo)}</h3>
           <p class="viaje-sub">${esc(v.subtitulo)}${v.fecha ? ` · ${esc(v.fecha)}` : ''}</p>
           ${v.intro ? `<p class="viaje-intro">${esc(v.intro)}</p>` : ''}
-          <p class="viaje-datos">${plural(lugares, 'lugar', 'lugares')} · ${plural(fotos, 'foto', 'fotos')}</p>
-          <span class="viaje-abrir">Abrir la guía ${ICONO.flecha}</span>
+          <p class="viaje-datos">${datos}</p>
+          <span class="viaje-abrir">${v.privado ? 'Abrir el viaje' : 'Abrir la guía'} ${ICONO.flecha}</span>
         </div>
       </a>`;
   };
+
+  const barra = (extra = '') => `
+    <nav class="barra" aria-label="Principal">
+      <div class="contenedor barra-interior">
+        <a class="barra-volver" href="#/">${ICONO.volver}<span>Viajes</span></a>
+        <div class="barra-derecha"><a class="barra-marca" href="#/">${esc(DATOS.marca)}</a>${extra}</div>
+      </div>
+    </nav>`;
+
+  const cabeceraViaje = (viaje) => `
+    <header class="viaje-cabecera contenedor">
+      ${viaje.portada ? `<div class="viaje-portada"><img src="${esc(viaje.portada)}" alt="" decoding="async"></div>` : ''}
+      <div class="viaje-titular">
+        <h1>${esc(viaje.titulo)}</h1>
+        <p class="viaje-sub">${esc(viaje.subtitulo)}${viaje.fecha ? ` · ${esc(viaje.fecha)}` : ''}</p>
+        ${viaje.intro ? `<p class="viaje-intro">${esc(viaje.intro)}</p>` : ''}
+      </div>
+    </header>`;
 
   const mosaico = (lugar, fotos) => {
     const n = Math.min(fotos.length, 4);
@@ -124,7 +150,14 @@
           ${s.descripcion ? `<p>${esc(s.descripcion)}</p>` : ''}
         </div>
         <div class="bebidas">
-          ${s.bebidas.map((b) => `<article class="bebida"><h3>${esc(b.nombre)}</h3><p>${esc(b.texto)}</p></article>`).join('')}
+          ${s.bebidas.map((b) => {
+            const fotos = fotosDe(viaje, b);
+            return `
+              <article class="bebida${fotos.length ? ' con-fotos' : ''}">
+                ${fotos.length ? mosaico(b, fotos) : ''}
+                <div class="bebida-cuerpo"><h3>${esc(b.nombre)}</h3><p>${esc(b.texto)}</p></div>
+              </article>`;
+          }).join('')}
         </div>`;
     }
     const lugares = s.lugares || [];
@@ -176,28 +209,16 @@
 
     if (!mismo) {
       viajeActual = viaje;
-      lugaresPorId = new Map(lugaresDe(viaje).map((l) => [l.id, l]));
+      lugaresPorId = new Map(conFotos(viaje).map((l) => [l.id, l]));
       app.dataset.vista = 'viaje';
       app.dataset.viaje = viaje.id;
-      const pestanas = viaje.secciones.map((s) => `
+      const pestanas = seccionesDe(viaje).map((s) => `
         <a role="tab" id="tab-${esc(s.id)}" class="pestana" href="#/${esc(viaje.id)}/${esc(s.id)}"
            aria-controls="panel" aria-selected="false" tabindex="-1">${esc(s.corto || s.titulo)}</a>`).join('');
       app.innerHTML = `
         ${avisoFotos}
-        <nav class="barra" aria-label="Principal">
-          <div class="contenedor barra-interior">
-            <a class="barra-volver" href="#/">${ICONO.volver}<span>Viajes</span></a>
-            <a class="barra-marca" href="#/">${esc(DATOS.marca)}</a>
-          </div>
-        </nav>
-        <header class="viaje-cabecera contenedor">
-          ${viaje.portada ? `<div class="viaje-portada"><img src="${esc(viaje.portada)}" alt="" decoding="async"></div>` : ''}
-          <div class="viaje-titular">
-            <h1>${esc(viaje.titulo)}</h1>
-            <p class="viaje-sub">${esc(viaje.subtitulo)}${viaje.fecha ? ` · ${esc(viaje.fecha)}` : ''}</p>
-            ${viaje.intro ? `<p class="viaje-intro">${esc(viaje.intro)}</p>` : ''}
-          </div>
-        </header>
+        ${barra()}
+        ${cabeceraViaje(viaje)}
         <div class="ancla-pestanas"></div>
         <div class="pestanas">
           <div class="contenedor">
@@ -210,6 +231,11 @@
       enfocarTitulo();
     }
 
+    const panelVacio = document.getElementById('panel');
+    if (!seccion) {
+      panelVacio.innerHTML = aviso('Este viaje no tiene secciones todavía.', 'Añádelas en <code>datos.js</code>.');
+      return;
+    }
     app.querySelectorAll('.pestana').forEach((p) => {
       const activa = p.id === `tab-${seccion.id}`;
       p.setAttribute('aria-selected', String(activa));
@@ -228,6 +254,157 @@
     }
   }
 
+  // ---------- Viajes privados (cifrados; se abren con contraseña) ----------
+  // El contenido es un HTML completo cifrado con AES-GCM (clave derivada con
+  // PBKDF2) por herramientas/cifrar-viaje.mjs. Se descifra en el navegador y
+  // se muestra dentro de un iframe para que conserve su propio diseño.
+  const CLAVE_PREFIJO = 'lenygabo.clave.';
+  const paquetes = new Map(); // id del viaje → Promise con el paquete cifrado
+
+  function cargarCifrado(viaje) {
+    if (!paquetes.has(viaje.id)) {
+      const promesa = new Promise((resolver, rechazar) => {
+        const paquete = () => (window.CIFRADO || {})[viaje.id];
+        if (paquete()) { resolver(paquete()); return; }
+        const s = document.createElement('script');
+        s.src = viaje.privado.archivo;
+        s.onload = () => (paquete() ? resolver(paquete()) : rechazar(new Error('El archivo cifrado no contiene este viaje.')));
+        s.onerror = () => rechazar(new Error(`No se pudo descargar ${viaje.privado.archivo}. Revisa la conexión e inténtalo de nuevo.`));
+        document.head.appendChild(s);
+      });
+      promesa.catch(() => paquetes.delete(viaje.id)); // permite reintentar
+      paquetes.set(viaje.id, promesa);
+    }
+    return paquetes.get(viaje.id);
+  }
+
+  const desdeB64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+  async function descifrar(paquete, clave) {
+    const subtle = (window.crypto || {}).subtle;
+    if (!subtle) throw new Error('Este navegador solo puede abrir el viaje desde una dirección https o desde el archivo local.');
+    const material = await subtle.importKey('raw', new TextEncoder().encode(clave.normalize('NFC')), 'PBKDF2', false, ['deriveKey']);
+    const llave = await subtle.deriveKey(
+      { name: 'PBKDF2', salt: desdeB64(paquete.sal), iterations: paquete.iteraciones, hash: 'SHA-256' },
+      material, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+    );
+    const plano = await subtle.decrypt({ name: 'AES-GCM', iv: desdeB64(paquete.iv) }, llave, desdeB64(paquete.datos));
+    return new TextDecoder().decode(plano);
+  }
+
+  const claveGuardada = (id) => {
+    try { return localStorage.getItem(CLAVE_PREFIJO + id) || sessionStorage.getItem(CLAVE_PREFIJO + id); } catch { return null; }
+  };
+  const guardarClave = (id, clave, enDispositivo) => {
+    try {
+      sessionStorage.setItem(CLAVE_PREFIJO + id, clave);
+      if (enDispositivo) localStorage.setItem(CLAVE_PREFIJO + id, clave);
+    } catch { /* almacenamiento bloqueado: se pedirá otra vez */ }
+  };
+  const olvidarClave = (id) => {
+    try { localStorage.removeItem(CLAVE_PREFIJO + id); sessionStorage.removeItem(CLAVE_PREFIJO + id); } catch { /* nada */ }
+  };
+
+  function renderPrivado(viaje) {
+    document.title = `${viaje.titulo} · ${DATOS.marca}`;
+    viajeActual = null;
+    lugaresPorId = new Map();
+    app.dataset.vista = 'privado';
+    app.dataset.viaje = viaje.id;
+    app.innerHTML = `
+      ${barra()}
+      ${cabeceraViaje(viaje)}
+      <main class="contenedor">
+        <section class="candado" aria-labelledby="candado-titulo">
+          <div class="candado-icono">${ICONO.candado}</div>
+          <div class="candado-texto">
+            <h2 id="candado-titulo">Este viaje es privado</h2>
+            <p>Tiene los vuelos, los camarotes y las confirmaciones de la familia, así que se abre con contraseña.</p>
+            <form class="candado-form" novalidate>
+              <label class="candado-etiqueta" for="candado-clave">Contraseña</label>
+              <div class="candado-campo">
+                <input id="candado-clave" name="clave" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" required>
+                <button type="button" class="candado-ver" aria-label="Mostrar contraseña" aria-pressed="false">${ICONO.ojo}</button>
+              </div>
+              <label class="candado-recordar"><input type="checkbox" name="recordar"> Recordar en este dispositivo</label>
+              <button type="submit" class="boton candado-abrir">${ICONO.abierto}<span>Abrir el viaje</span></button>
+              <p class="candado-error" role="alert"></p>
+            </form>
+            ${viaje.privado.pista ? `<p class="candado-pista">${esc(viaje.privado.pista)}</p>` : ''}
+          </div>
+        </section>
+      </main>
+      ${pie()}`;
+    window.scrollTo(0, 0);
+    enfocarTitulo();
+
+    const form = app.querySelector('.candado-form');
+    const campo = form.elements.clave;
+    const recordar = form.elements.recordar;
+    const error = form.querySelector('.candado-error');
+    const abrir = form.querySelector('.candado-abrir');
+    const ver = form.querySelector('.candado-ver');
+    cargarCifrado(viaje).catch(() => {}); // empieza a descargar mientras se escribe la contraseña
+
+    ver.addEventListener('click', () => {
+      const mostrar = campo.type === 'password';
+      campo.type = mostrar ? 'text' : 'password';
+      ver.setAttribute('aria-pressed', String(mostrar));
+      ver.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      campo.focus();
+    });
+
+    const ocupado = (si) => {
+      abrir.disabled = si;
+      campo.readOnly = si;
+      abrir.querySelector('span').textContent = si ? 'Abriendo…' : 'Abrir el viaje';
+    };
+
+    async function intentar(clave, enDispositivo, automatico) {
+      error.textContent = '';
+      ocupado(true);
+      try {
+        const paquete = await cargarCifrado(viaje);
+        const html = await descifrar(paquete, clave);
+        if (app.dataset.viaje !== viaje.id || app.dataset.vista !== 'privado') return; // ya se navegó a otro lado
+        guardarClave(viaje.id, clave, enDispositivo);
+        mostrarPrivado(viaje, html);
+      } catch (e) {
+        if (app.dataset.viaje !== viaje.id || app.dataset.vista !== 'privado') return;
+        ocupado(false);
+        if (automatico) { olvidarClave(viaje.id); campo.value = ''; return; }
+        error.textContent = e && e.name === 'OperationError'
+          ? 'Esa contraseña no es. Revisa mayúsculas, guiones y espacios.'
+          : (e && e.message) || 'No se pudo abrir el viaje.';
+        campo.focus();
+        campo.select();
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const clave = campo.value.trim();
+      if (!clave) { error.textContent = 'Escribe la contraseña.'; campo.focus(); return; }
+      intentar(clave, recordar.checked, false);
+    });
+
+    const previa = claveGuardada(viaje.id);
+    if (previa) { campo.value = previa; intentar(previa, false, true); }
+  }
+
+  function mostrarPrivado(viaje, html) {
+    app.dataset.vista = 'privado-abierto';
+    app.innerHTML = `
+      ${barra(`<button type="button" class="barra-bloquear">${ICONO.candado}<span>Bloquear</span></button>`)}
+      <div class="privado-pantalla"><iframe class="privado-marco" title="${esc(viaje.titulo)}"></iframe></div>`;
+    app.querySelector('.privado-marco').srcdoc = html;
+    app.querySelector('.barra-bloquear').addEventListener('click', () => {
+      olvidarClave(viaje.id);
+      renderPrivado(viaje);
+    });
+    window.scrollTo(0, 0);
+  }
+
   // ---------- Router ----------
   function render() {
     const partes = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
@@ -236,7 +413,14 @@
       renderPortada();
       return;
     }
-    const seccion = viaje.secciones.find((s) => s.id === partes[1]) || viaje.secciones[0];
+    if (viaje.privado) {
+      // Si ya está abierto, no se vuelve a pedir la contraseña por un cambio de hash.
+      if (app.dataset.viaje === viaje.id && app.dataset.vista === 'privado-abierto') return;
+      renderPrivado(viaje);
+      return;
+    }
+    const secciones = seccionesDe(viaje);
+    const seccion = secciones.find((s) => s.id === partes[1]) || secciones[0];
     renderViaje(viaje, seccion);
   }
   window.addEventListener('hashchange', render);

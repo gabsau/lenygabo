@@ -24,6 +24,12 @@ window.FOTOS = {
       {"src":"IMAGENES/SAN SEBASTIAN/GANDARIAS/PHOTO-2026-09-06-10-16-40.jpg","pie":"Concha de marisco gratinada"},
       {"src":"IMAGENES/SAN SEBASTIAN/GANDARIAS/PHOTO-2026-09-06-10-16-58.jpg","pie":"Arroz con leche"}
     ],
+    "la-cuchara-de-san-telmo": [
+      {"src":"IMAGENES/SAN SEBASTIAN/LA CUCHARA DE SAN TELMO/PHOTO-2026-09-06-14-19-54.jpg","pie":"Foie a la plancha con compota de manzana"},
+      {"src":"IMAGENES/SAN SEBASTIAN/LA CUCHARA DE SAN TELMO/PHOTO-2026-09-06-14-19-19.jpg","pie":"Risotto de sepia con queso Idiazábal"},
+      {"src":"IMAGENES/SAN SEBASTIAN/LA CUCHARA DE SAN TELMO/PHOTO-2026-09-06-14-19-44.jpg","pie":"Carrillera de ternera guisada al vino tinto"},
+      {"src":"IMAGENES/SAN SEBASTIAN/LA CUCHARA DE SAN TELMO/PHOTO-2026-09-06-14-19-32.jpg","pie":"La fila en la puerta, en la calle 31 de Agosto"}
+    ],
     "la-vina": [
       {"src":"IMAGENES/SAN SEBASTIAN/LA VINA/PHOTO-2026-09-06-10-17-50.jpg","pie":"Tarta de queso vasca"}
     ],
@@ -33,6 +39,14 @@ window.FOTOS = {
     ],
     "txepetxa": [
       {"src":"IMAGENES/SAN SEBASTIAN/TXEPETXA/PHOTO-2026-09-06-10-24-13.jpg","pie":"Anchoa con crema de centollo"}
+    ],
+    "cana": [
+      {"src":"IMAGENES/SAN SEBASTIAN/cana/PHOTO-2026-09-06-14-21-04.jpg","pie":"Dos cañas en una terraza de la Parte Vieja"}
+    ],
+    "txacoli": [
+      {"src":"IMAGENES/SAN SEBASTIAN/txacoli/PHOTO-2026-09-06-14-21-33.jpg","pie":"Txacoli, con un tinto de compañía, en la calle"}
     ]
+  },
+  "orlando-2026": {
   }
 };

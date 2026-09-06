@@ -11,19 +11,22 @@ estilos.css                estilos
 app.js                     router, render, mosaicos de fotos y visor
 datos.js                   CONTENIDO: viajes, lugares, platos, bebidas (se edita a mano)
 fotos.js                   GENERADO: lista de fotos por lugar (se regenera con el script)
-fuentes/                   tipografía Fraunces (titulares)
-IMAGENES/<VIAJE>/<LUGAR>/  fotos de cada lugar
-IMAGENES/<VIAJE>/PORTADA.jpg      foto de portada del viaje
+fuentes/                   tipografía Young Serif (titulares)
+IMAGENES/<VIAJE>/<LUGAR>/  fotos de cada lugar o bebida
+IMAGENES/<VIAJE>/PORTADA.jpg      foto (o .svg) de portada del viaje
 IMAGENES/<VIAJE>/PORTADA-og.jpg   imagen 1200×630 para la vista previa al compartir
+viajes/<id>.cifrado.js     GENERADO: contenido cifrado de un viaje privado
 herramientas/actualizar-fotos.mjs
-respaldo/                  originales y versiones anteriores (no se publica)
+herramientas/cifrar-viaje.mjs
+respaldo/                  originales, contraseñas y versiones anteriores (no se publica)
 ```
 
 ## Añadir fotos
 
 1. Copia las fotos a `IMAGENES/<VIAJE>/<NOMBRE DEL LUGAR>/`. El nombre de la carpeta se compara
-   con `nombre` y `alias` del lugar en `datos.js` sin importar mayúsculas, acentos ni signos
-   (por ejemplo `BORDA BERI` casa con `Borda Berri` gracias a su alias).
+   con `nombre` y `alias` del lugar (o de la bebida) en `datos.js` sin importar mayúsculas, acentos
+   ni signos (por ejemplo `BORDA BERI` casa con `Borda Berri` gracias a su alias, y `cana` con `Caña`).
+   Las bebidas necesitan un `id` en `datos.js` para poder llevar fotos.
 2. Ejecuta:
 
    ```bash
@@ -49,6 +52,29 @@ respaldo/                  originales y versiones anteriores (no se publica)
 
 Los enlaces de Google Maps usan el formato
 `https://www.google.com/maps/search/?api=1&query=<Nombre+Direccion+Ciudad>`, que abre la app en el móvil.
+
+## Viaje privado (con contraseña)
+
+Un viaje puede ser un HTML completo hecho aparte (por ejemplo el planificador de Orlando 2026, que
+se arma con su propio `build.py` en `~/Downloads/orlando2026/`). Como lleva reservas y datos de la
+familia, no se publica en claro: se cifra y solo se abre con contraseña.
+
+1. En `datos.js` el viaje no lleva `secciones`, sino `privado: { archivo: 'viajes/<id>.cifrado.js', pista: '...' }`,
+   además de `titulo`, `subtitulo`, `fecha`, `intro`, `portada` y `carpetaFotos` (para la portada).
+2. Genera el HTML del viaje (en Orlando: `python3 _fuente/build.py` dentro de su carpeta) y cífralo:
+
+   ```bash
+   node herramientas/cifrar-viaje.mjs orlando-2026 "/Users/gs/Downloads/orlando2026/Viaje Orlando 2026.html"
+   ```
+
+   La contraseña se lee de `respaldo/claves/<id>.txt`; si no existe, el script inventa una fácil de
+   dictar, la guarda ahí y la imprime. Para cambiarla, borra ese archivo o pasa `--clave "nueva"` y
+   vuelve a cifrar. Repite el comando cada vez que cambie el planificador.
+3. Al abrir el viaje, la guía pide la contraseña, descifra en el navegador (AES-GCM con Web Crypto)
+   y muestra el HTML dentro de un marco con su propio diseño. «Recordar en este dispositivo» guarda la
+   contraseña en el navegador; el botón «Bloquear» la olvida.
+
+Ni el HTML original ni los PDF deben copiarse a esta carpeta: solo se publica el archivo cifrado.
 
 ## Publicar
 

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="Ilustración: un crucero navega frente al sol">
+  <defs>
+    <linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7F3ED"/>
+      <stop offset="1" stop-color="#EEDFC8"/>
+    </linearGradient>
+    <linearGradient id="mar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D4A574"/>
+      <stop offset="1" stop-color="#B8894F"/>
+    </linearGradient>
+  </defs>
+
+  <!-- cielo -->
+  <rect width="1600" height="1000" fill="url(#cielo)"/>
+
+  <!-- sol -->
+  <circle cx="1130" cy="330" r="150" fill="#D4A574"/>
+  <circle cx="1130" cy="330" r="190" fill="none" stroke="#D4A574" stroke-opacity="0.35" stroke-width="3"/>
+
+  <!-- gaviotas -->
+  <g fill="none" stroke="#3F312A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M400 320 q22 -24 44 0 q22 -24 44 0"/>
+    <path d="M500 262 q16 -18 32 0 q16 -18 32 0"/>
+    <path d="M330 262 q12 -14 24 0 q12 -14 24 0"/>
+  </g>
+
+  <!-- mar -->
+  <rect x="0" y="640" width="1600" height="360" fill="url(#mar)"/>
+
+  <!-- reflejo del barco -->
+  <g fill="#3F312A" opacity="0.16">
+    <path d="M330 656 L1300 656 L1270 676 L360 676 Z"/>
+    <path d="M400 696 L1220 696 L1200 710 L420 710 Z"/>
+    <path d="M520 730 L1100 730 L1085 740 L535 740 Z"/>
+  </g>
+
+  <!-- barco -->
+  <g fill="#3F312A">
+    <path d="M300 640 L300 560 L1180 560 Q1290 560 1340 640 Z"/>
+    <rect x="350" y="510" width="820" height="50"/>
+    <rect x="400" y="466" width="700" height="44"/>
+    <rect x="470" y="428" width="520" height="38"/>
+    <path d="M520 428 L520 392 Q520 380 532 380 L700 380 Q712 380 712 392 L712 428 Z"/>
+    <path d="M880 428 L892 352 L946 352 L958 428 Z"/>
+    <rect x="884" y="340" width="70" height="12"/>
+    <path d="M1340 640 L1360 640 L1352 600 Z"/>
+  </g>
+
+  <!-- ventanas -->
+  <g stroke="#F5F1EB" stroke-linecap="butt" fill="none">
+    <line x1="380" y1="535" x2="1140" y2="535" stroke-width="12" stroke-dasharray="16 18"/>
+    <line x1="430" y1="488" x2="1070" y2="488" stroke-width="12" stroke-dasharray="16 18"/>
+    <line x1="500" y1="447" x2="960" y2="447" stroke-width="12" stroke-dasharray="16 18"/>
+    <line x1="540" y1="404" x2="692" y2="404" stroke-width="10" stroke-dasharray="22 12"/>
+    <line x1="340" y1="600" x2="1210" y2="600" stroke-width="8" stroke-dasharray="8 26"/>
+  </g>
+
+  <!-- olas -->
+  <g fill="none" stroke="#F5F1EB" stroke-linecap="round" stroke-width="5">
+    <path opacity="0.85" d="M-40 760 q40 -18 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0"/>
+    <path opacity="0.65" d="M-80 830 q40 -18 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0"/>
+    <path opacity="0.5" d="M-20 905 q40 -18 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0"/>
+    <path opacity="0.35" d="M-60 970 q40 -18 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0"/>
+    <path opacity="0.9" stroke-width="6" d="M240 648 q30 -14 60 0 t60 0 t60 0"/>
+    <path opacity="0.9" stroke-width="6" d="M1330 652 q30 -14 60 0 t60 0"/>
+  </g>
+</svg>

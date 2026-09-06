@@ -123,7 +123,7 @@ h1, h2, h3 {
 .viajes-lista {
   display: grid;
   gap: 24px;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
 }
 
 .viaje {
@@ -162,6 +162,7 @@ h1, h2, h3 {
 .viaje-sub { margin: 0; color: var(--texto-suave); font-size: 0.95rem; }
 .viaje-intro { margin: 8px 0 0; line-height: 1.55; text-wrap: pretty; }
 .viaje-datos { margin: 6px 0 0; font-size: 0.9rem; color: var(--texto-suave); font-variant-numeric: tabular-nums; }
+.viaje-datos svg { width: 15px; height: 15px; vertical-align: -2px; margin-right: 6px; }
 .viaje-abrir {
   margin-top: 18px;
   justify-self: start;
@@ -212,6 +213,23 @@ h1, h2, h3 {
 }
 .barra-volver svg { width: 20px; height: 20px; }
 .barra-volver:hover { color: var(--tinta); }
+.barra-derecha { display: flex; align-items: center; gap: 14px; }
+.barra-bloquear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--linea);
+  background: var(--papel);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--texto);
+  cursor: pointer;
+  transition: border-color 0.2s var(--curva), color 0.2s var(--curva);
+}
+.barra-bloquear svg { width: 16px; height: 16px; }
+.barra-bloquear:hover { color: var(--tinta); border-color: var(--caramelo); }
 .barra-marca {
   font-family: var(--fuente-titulo);
   font-weight: 400;
@@ -447,11 +465,100 @@ h1, h2, h3 {
   margin-bottom: 24px;
 }
 .bebida {
+  display: flex;
+  flex-direction: column;
   background: var(--papel);
-  padding: clamp(24px, 4vw, 36px);
 }
+.bebida-cuerpo { padding: clamp(24px, 4vw, 36px); }
 .bebida h3 { font-size: 1.75rem; letter-spacing: -0.015em; margin-bottom: 10px; }
 .bebida p { margin: 0; line-height: 1.65; max-width: 48ch; text-wrap: pretty; }
+
+/* ---------- Viaje privado: candado y contraseña ---------- */
+.candado {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px 28px;
+  align-items: start;
+  max-width: 680px;
+  margin: 32px 0 24px;
+  padding: clamp(24px, 4vw, 40px);
+  background: var(--papel);
+  border-top: 3px solid var(--caramelo);
+  box-shadow: var(--sombra);
+}
+.candado-icono {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  background: var(--linea-suave);
+  color: var(--tinta);
+}
+.candado-icono svg { width: 28px; height: 28px; }
+.candado h2 { font-size: 1.75rem; line-height: 1.1; letter-spacing: -0.015em; }
+.candado-texto > p { margin: 10px 0 0; line-height: 1.6; text-wrap: pretty; }
+.candado-form { display: grid; gap: 12px; margin-top: 22px; }
+.candado-etiqueta { font-size: 0.9rem; font-weight: 600; color: var(--tinta); }
+.candado-campo {
+  display: flex;
+  border: 1px solid var(--linea);
+  background: var(--fondo);
+  transition: border-color 0.2s var(--curva);
+}
+.candado-campo:focus-within { border-color: var(--caramelo-oscuro); outline: 2px solid var(--caramelo); outline-offset: 0; }
+.candado-campo input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  color: var(--tinta);
+}
+.candado-campo input:focus { outline: none; }
+.candado-campo input:read-only { color: var(--texto-suave); }
+.candado-ver {
+  width: 48px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--texto-suave);
+  cursor: pointer;
+}
+.candado-ver svg { width: 20px; height: 20px; }
+.candado-ver[aria-pressed="true"] { color: var(--tinta); }
+.candado-recordar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--texto);
+  cursor: pointer;
+}
+.candado-recordar input { width: 18px; height: 18px; margin: 0; accent-color: var(--caramelo-oscuro); }
+.candado-abrir { justify-self: start; border: 0; cursor: pointer; }
+.candado-abrir:disabled { opacity: 0.6; cursor: progress; }
+.candado-error { margin: 0; font-size: 0.9rem; line-height: 1.5; color: #9B3B2E; }
+.candado-error:empty { display: none; }
+.candado-pista { margin: 18px 0 0; font-size: 0.9rem; color: var(--texto-suave); text-wrap: pretty; }
+@media (max-width: 480px) {
+  .candado { grid-template-columns: 1fr; }
+  .candado-abrir { justify-self: stretch; }
+}
+
+/* ---------- Viaje privado abierto: el contenido descifrado en un marco ---------- */
+.privado-pantalla {
+  height: calc(100vh - var(--alto-barra));
+  height: calc(100dvh - var(--alto-barra));
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--fondo);
+}
+.privado-marco { display: block; width: 100%; height: 100%; border: 0; }
 
 /* ---------- Pie ---------- */
 .pie {
